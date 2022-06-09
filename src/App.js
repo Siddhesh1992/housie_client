@@ -1,24 +1,39 @@
-import logo from './logo.svg';
-import './App.css';
-
+import React, { useEffect, useReducer } from "react";
+import { Context } from "./context";
+import { Routes, Route } from "react-router-dom";
+import { initialState } from "./context";
+import reducer from "./context/reducer";
+import Login from "./Login";
 function App() {
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  // global error
+  useEffect(() => {
+    const messageListener = (msg) => {
+      console.log(msg);
+    };
+    state.socket.on("error", messageListener);
+    state.socket.on("success", messageListener);
+
+    return () => {
+      state.socket.off("error", messageListener);
+      state.socket.off("success", messageListener);
+    };
+  }, [state.socket]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Context.Provider value={{ state, dispatch }}>
+      <Routes>
+        <Route path={"/"} element={<Login />} />
+      </Routes>
+    </Context.Provider>
+    // <div className="App">
+    //   <header className="app-header">React Chat</header>
+    //   {socket.id}
+    //   <div className="chat-container">
+    //     <button onClick={test}>test</button>
+    //   </div>
+    // </div>
   );
 }
 
