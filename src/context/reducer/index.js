@@ -10,6 +10,11 @@ const reducer = (state, action) => {
         ...state,
         user: action.payload,
       };
+    case "SOCKET_ID":
+      return {
+        ...state,
+        socket_id: action.payload,
+      };
     default:
       return state;
   }

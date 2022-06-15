@@ -4,6 +4,7 @@ import { Routes, Route } from "react-router-dom";
 import { initialState } from "./context";
 import reducer from "./context/reducer";
 import Login from "./Login";
+import Room from "./Room";
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
 
@@ -12,19 +13,46 @@ function App() {
     const messageListener = (msg) => {
       console.log(msg);
     };
-    state.socket.on("error", messageListener);
-    state.socket.on("success", messageListener);
+
+    if (localStorage.getItem("user")) {
+      dispatch({
+        type: "USER",
+        payload: JSON.parse(localStorage.getItem("user")),
+      });
+    }
+    try {
+      state.socket.on("error", messageListener);
+      state.socket.on("success", messageListener);
+
+      state.socket.on("connect", () => {
+        dispatch({ type: "SOCKET_ID", payload: state.socket.id });
+        if (localStorage.getItem("user")) {
+          state.socket.emit("/userConnected", {
+            user: JSON.parse(localStorage.getItem("user")),
+          });
+        }
+        // state.user &&
+        //   state.socket.emit("/connected", { socketId: socket.id, user: state.user._id });
+      });
+    } catch (e) {}
 
     return () => {
-      state.socket.off("error", messageListener);
-      state.socket.off("success", messageListener);
+      try {
+        state.socket.off("error", messageListener);
+        state.socket.off("success", messageListener);
+      } catch (e) {}
     };
   }, [state.socket]);
 
   return (
-    <Context.Provider value={{ state, dispatch }}>
+    <Context.Provider
+      value={{ state, dispatch }}
+      displayName="Context Display Name"
+    >
+      My Socket ID: {state.socket_id}
       <Routes>
         <Route path={"/"} element={<Login />} />
+        <Route path={"/room"} element={<Room />} />
       </Routes>
     </Context.Provider>
     // <div className="App">

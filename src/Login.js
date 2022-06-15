@@ -1,7 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Context } from "./context";
 export default function Login() {
   const { state, dispatch } = useContext(Context);
+  const navigate = useNavigate();
   const [mobile, setMobile] = useState("");
   const [pass, setPass] = useState("");
 
@@ -14,16 +16,21 @@ export default function Login() {
   useEffect(() => {
     const messageListener = (result) => {
       if (result.msg === "success") {
+        localStorage.setItem("user", JSON.stringify(result.data));
         dispatch({ type: "USER", payload: result.data });
       }
     };
 
-    state.socket.on("success", messageListener);
+    try {
+      state.socket.on("success", messageListener);
+    } catch (e) {}
 
     return () => {
-      state.socket.off("success", messageListener);
+      try {
+        state.socket.off("success", messageListener);
+      } catch (e) {}
     };
-  }, [state.socket]);
+  }, [dispatch, state.socket]);
 
   return (
     <div>
@@ -38,6 +45,7 @@ export default function Login() {
         value={pass}
         onChange={(e) => setPass(e.target.value)}
       />
+      <button onClick={() => navigate("/room")}>Login</button>
       <button onClick={generateOtp}>Generate OTP</button>
     </div>
   );
