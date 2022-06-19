@@ -4,8 +4,8 @@ export default function Room() {
   const { state, dispatch } = useContext(Context);
   const [users, setUsers] = useState([]);
   const [room, setRoom] = useState("");
+  const [publicRoom, setPublicRoom] = useState("");
 
-  console.log(state);
   useEffect(() => {
     const messageListener = ({ room }) => {
       setRoom(room);
@@ -28,7 +28,15 @@ export default function Room() {
 
   const createJoinPublic = () => {
     state.socket.emit("/createJoinPublicRequest", {
-      mobile: state.user.mobile,
+      user: state.user,
+    });
+  };
+
+  const leaveRoom = () => {
+    setUsers([]);
+    state.socket.emit("/leaveRoom", {
+      room,
+      user: state.user,
     });
   };
 
@@ -36,12 +44,18 @@ export default function Room() {
     <div>
       <div>You have Joined: {room}</div>
       {users.map((user) => (
-        <div>{user.mobileNo + " as joined"}</div>
+        <div>{user.mobile + " as joined"}</div>
       ))}
+      <input
+        type="text"
+        placeholder="roomId"
+        value={publicRoom}
+        onChange={(e) => setPublicRoom(e.target.value)}
+      />
       <button onClick={createJoinPublic}>Create/Join public Room</button>
       <button onClick={() => {}}>Create Private Room</button>
       <button onClick={() => {}}>Create Public Room</button>
-      <button onClick={() => {}}>Leave Room</button>
+      <button onClick={() => leaveRoom()}>Leave Room</button>
     </div>
   );
 }

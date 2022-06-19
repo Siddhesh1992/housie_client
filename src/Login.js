@@ -16,7 +16,7 @@ export default function Login() {
   useEffect(() => {
     const messageListener = (result) => {
       if (result.msg === "success") {
-        localStorage.setItem("user", JSON.stringify(result.data));
+        sessionStorage.setItem("user", JSON.stringify(result.data));
         dispatch({ type: "USER", payload: result.data });
       }
     };

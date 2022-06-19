@@ -14,10 +14,10 @@ function App() {
       console.log(msg);
     };
 
-    if (localStorage.getItem("user")) {
+    if (sessionStorage.getItem("user")) {
       dispatch({
         type: "USER",
-        payload: JSON.parse(localStorage.getItem("user")),
+        payload: JSON.parse(sessionStorage.getItem("user")),
       });
     }
     try {
@@ -26,9 +26,9 @@ function App() {
 
       state.socket.on("connect", () => {
         dispatch({ type: "SOCKET_ID", payload: state.socket.id });
-        if (localStorage.getItem("user")) {
+        if (sessionStorage.getItem("user")) {
           state.socket.emit("/userConnected", {
-            user: JSON.parse(localStorage.getItem("user")),
+            user: JSON.parse(sessionStorage.getItem("user")),
           });
         }
         // state.user &&
