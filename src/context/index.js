@@ -1,8 +1,11 @@
 import React from "react";
 import socketio from "socket.io-client";
-const SOCKET_URL = "http://localhost:3000";
+const { io } = require("socket.io-client");
 
-export const socket = socketio.connect(SOCKET_URL);
+const SOCKET_URL = `http://localhost:3000`;
+
+// export const socket = socketio.connect(SOCKET_URL);
+export const socket = io();
 
 export const initialState = {
   socket,
