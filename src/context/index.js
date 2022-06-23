@@ -4,8 +4,8 @@ const { io } = require("socket.io-client");
 
 const SOCKET_URL = `http://localhost:3000`;
 
-// export const socket = socketio.connect(SOCKET_URL);
-export const socket = io();
+export const socket = socketio.connect(SOCKET_URL);
+// export const socket = io();
 
 export const initialState = {
   socket,

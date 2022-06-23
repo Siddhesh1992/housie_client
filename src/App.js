@@ -10,8 +10,8 @@ function App() {
 
   // global error
   useEffect(() => {
-    const messageListener = (msg) => {
-      console.log(msg);
+    const messageListener = (result) => {
+      alert(result.msg);
     };
 
     if (sessionStorage.getItem("user")) {
