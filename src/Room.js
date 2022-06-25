@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Context } from "./context";
 export default function Room() {
-  const { state, dispatch } = useContext(Context);
+  const { state } = useContext(Context);
   const [users, setUsers] = useState([]);
   const [room, setRoom] = useState("");
   const [privateRoomId, setPrivateRoom] = useState("");

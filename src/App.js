@@ -49,7 +49,7 @@ function App() {
       value={{ state, dispatch }}
       displayName="Context Display Name"
     >
-      My Socket ID: {state.socket_id}
+      My Socket ID: {state.socket_id} {process.env.REACT_APP_NODE_ENV}
       <Routes>
         <Route path={"/"} element={<Login />} />
         <Route path={"/room"} element={<Room />} />
